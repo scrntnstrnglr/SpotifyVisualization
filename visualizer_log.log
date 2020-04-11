@@ -5301,3 +5301,6 @@ INFO    2020-04-11 21:53:49,002 [main] com.tcd.spotify.YearCanvas  - Setting Yea
 INFO    2020-04-11 21:58:41,747 [main] com.tcd.spotify.YearCanvas  - Loading data...
 INFO    2020-04-11 21:58:45,274 [main] com.tcd.spotify.YearCanvas  - Database Created!
 INFO    2020-04-11 21:58:45,365 [main] com.tcd.spotify.YearCanvas  - Setting Year Canvas
+INFO    2020-04-11 23:18:17,848 [main] com.tcd.spotify.YearCanvas  - Loading data...
+INFO    2020-04-11 23:18:21,279 [main] com.tcd.spotify.YearCanvas  - Database Created!
+INFO    2020-04-11 23:18:21,373 [main] com.tcd.spotify.YearCanvas  - Setting Year Canvas

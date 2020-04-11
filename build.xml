@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project SQLLiteSample">
+<project default="create_run_jar" name="Create Runnable Jar for Project SpotifyVisualization">
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <!--define folder properties-->
     <property name="dir.buildfile" value="."/>
     <property name="dir.workspace" value="${dir.buildfile}/.."/>
-    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <property name="dir.jarfile" value="${dir.buildfile}/target"/>
     <target name="create_run_jar">
-        <jar destfile="${dir.jarfile}/DBMANAGER.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${dir.jarfile}/SPOTIFY.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="com.tcd.databases.sample.DatabaseManager"/>
+                <attribute name="Main-Class" value="com.tcd.spotify.YearCanvas"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="${dir.jarfile}/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/sqlite-jdbc-3.30.1.jar"/>
+            <fileset dir="${dir.buildfile}/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/sqlite-jdbc-3.30.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/log4j-1.2.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/processing 3/core.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/controlP5.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/processing 3/gluegen-rt.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/processing 3/jogl-all.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/processing 3/json4processing.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/G4P.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/OCT.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/Shapes3D.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/peasy-math.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/peasycam.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/tracer.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/gifAnimation.jar"/>
         </jar>
     </target>
 </project>
