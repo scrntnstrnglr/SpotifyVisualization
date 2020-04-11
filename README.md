@@ -20,16 +20,16 @@ The project inlucdes a launcher application/jar  file which initiates the visual
 
 1. Clone repository:
 ```
-git clone https://github.com/scrntnstrnglr/Visualization
+git clone https://github.com/scrntnstrnglr/SpotifyVisualization
 ```
 2. Go to the target foloder.
-2. Double click "VISUALIZER.jar" file to run.
+2. Double click "SPOTIFY.jar" file to run.
 
 Alternatively
 
 3. Open a terminal/cmd and execute the following after navigating to the folder containing the executable jar.
 ```
-java -jar VISUALIZER.JAR
+java -jar SPOTIFY.JAR
 ```
 
 A log file is generated to keep track of errors and debug lines.
