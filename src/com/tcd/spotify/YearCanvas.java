@@ -335,13 +335,15 @@ public class YearCanvas extends PApplet {
 
 		pushMatrix();
 		// strokeWeight(4);
-		String textTitle, textArtist, textGenre;
+		String textTitle, textArtist, textGenre, pop;
 		textTitle = thisYearTable.getData("title", 2);
 		textArtist = thisYearTable.getData("artist", 2);
+		pop = thisYearTable.getData("popularity", 2);
 		textAlign(CENTER);
 		// fill(255);
 		text(textTitle, width / 2 - 190, height - 260);
 		text(textArtist, width / 2 - 190, height - 245);
+		text(pop, width / 2 - 190, height - 500);
 		noFill();
 		// stroke(255);
 		bezier(width / 2 - 190, height - 235, width / 2 - 190, height - 150, width / 2, height - 245, width / 2,
@@ -404,8 +406,10 @@ public class YearCanvas extends PApplet {
 			rotate((start + (start + radians)) / 2 + PI / 2);
 			textAlign(CENTER);
 			int value = sliderToLabelMapping.get(i);
-			char label = sliders.get("position2").get(value).tag.charAt(0);
-			float percentage = Math.round(sliders.get("position2").get(value).getValueF() * 100);
+			//char label = sliders.get("position2").get(value).tag.charAt(0);
+			String label = sliders.get("position2").get(value).tag;
+			String percentage = String.format("%.0f", (float) Math.round(sliders.get("position2").get(value).getValueF() * 100));
+			textSize(9.5f);
 			text(label + ":" + percentage + "%", 0, 0);
 			start += radians;
 			popMatrix();
@@ -538,6 +542,15 @@ public class YearCanvas extends PApplet {
 				songDetails.put("img", row.getString("img"));
 				songDetails.put("valence", row.getString("val"));
 
+				songDetails.put("duration", row.getString("dur"));
+				songDetails.put("dance", row.getString("dnce"));
+				songDetails.put("acoustic", row.getString("acous"));
+				songDetails.put("loudness", row.getString("dB"));
+				songDetails.put("liveness", row.getString("live"));
+				songDetails.put("bpm", row.getString("bpm"));
+				songDetails.put("speech", row.getString("spch"));
+				songDetails.put("energy", row.getString("nrgy"));
+
 				if (songScoreDetails.containsKey(overallScore)) {
 					ArrayList<HashMap<String, String>> thisScoreSongs = new ArrayList<HashMap<String, String>>(
 							songScoreDetails.get(overallScore));
@@ -567,7 +580,6 @@ public class YearCanvas extends PApplet {
 		String genre = foundSong.get("genre");
 		String year = foundSong.get("year");
 		String pop = foundSong.get("pop");
-		String valence = foundSong.get("valence");
 
 		int imgWidth = 100, imgHeight = 100;
 		float imgX = 130, imgY = height - 560;
@@ -582,7 +594,6 @@ public class YearCanvas extends PApplet {
 		text("Genre: " + genre, imgX + imgWidth + 10, imgY + 55);
 		text("Year: " + year, imgX + imgWidth + 10, imgY + 75);
 		text("Popularity: " + pop + "%", imgX + imgWidth + 10, imgY + 95);
-		// knobfindyourSong.setValue(Float.parseFloat(valence));
 
 		fill(255);
 		strokeWeight(2);
@@ -773,6 +784,21 @@ public class YearCanvas extends PApplet {
 
 	}
 
+	private static void setSliderValues(String name, HashMap<String, Float> songAttributes) {
+		// bpm //energy //dance //loudness //liveness //duration //acoustic //speech
+		LinkedList<GSlider> sliderList = sliders.get(name);
+
+		sliderList.get(0).setValue(songAttributes.get("duration")); // e
+		sliderList.get(1).setValue(songAttributes.get("dance")); // s
+		sliderList.get(2).setValue(songAttributes.get("acoustic")); // w
+		sliderList.get(3).setValue(songAttributes.get("loudness")); // north
+		sliderList.get(4).setValue(songAttributes.get("speech")); // se
+		sliderList.get(5).setValue(songAttributes.get("bpm")); // sw
+		sliderList.get(6).setValue(songAttributes.get("liveness")); // nw
+		sliderList.get(7).setValue(songAttributes.get("energy")); // ne
+
+	}
+
 	private PImage getPhoto(DTable thisYearTable, int position) {
 		return loadImage(thisYearTable.getData("img", position), "png");
 	}
@@ -932,6 +958,7 @@ public class YearCanvas extends PApplet {
 		green = 180;
 		blue = 90;
 		fill(red, green, blue);
+		currentYear = Integer.parseInt(String.format("%.0f",yearSlider.getValue()));
 		for (int i = 1; i <= numberOnRight; i++) {
 			currentYear++;
 			fill(red, green, blue);
@@ -963,14 +990,48 @@ public class YearCanvas extends PApplet {
 
 	private void workWith2DSliderValues(String property, float year, float propertyLevel) {
 		HashMap<String, Float> propertyValues = new HashMap<String, Float>();
-		if(property.equalsIgnoreCase("valence") || property.equalsIgnoreCase("popularity")) {
-			propertyValues.put(property, Float.parseFloat(String.format("%.0f", propertyLevel))*10);
-		}else {
-			propertyValues.put(property, Float.parseFloat(String.format("%.0f", propertyLevel))/10);
+		if (property.equalsIgnoreCase("valence") || property.equalsIgnoreCase("popularity")) {
+			propertyValues.put(property, Float.parseFloat(String.format("%.0f", propertyLevel)) * 10);
+		} else {
+			propertyValues.put(property, Float.parseFloat(String.format("%.0f", propertyLevel)) / 10);
 		}
-		HashMap<String, String> retrievedSong = new HashMap<String, String>(
+		HashMap<String, String> foundSong = new HashMap<String, String>(
 				getSong(propertyValues, Float.parseFloat(String.format("%.0f", year)), wholeTable).get(0));
-		
+
+		PImage artistImage = loadImage(foundSong.get("img"), "png");
+		String artist = foundSong.get("artist");
+		String title = foundSong.get("title");
+		String genre = foundSong.get("genre");
+		String foundYear = foundSong.get("year");
+		String pop = foundSong.get("pop");
+
+		int imgWidth = 100, imgHeight = 100;
+		float imgX = width / 2 + 570, imgY = height - 560;
+		artistImage.resize(imgWidth, imgHeight);
+		textAlign(LEFT);
+		noFill();
+		strokeWeight(4);
+		stroke(0);
+		rect(imgX, imgY, imgWidth, imgHeight, 10);
+		image(artistImage, imgX, imgY);
+		text("Artist: " + artist, imgX + imgWidth + 10, imgY + 15);
+		text("Title: " + title, imgX + imgWidth + 10, imgY + 35);
+		text("Genre: " + genre, imgX + imgWidth + 10, imgY + 55);
+		text("Year: " + foundYear, imgX + imgWidth + 10, imgY + 75);
+		text("Popularity: " + pop + "%", imgX + imgWidth + 10, imgY + 95);
+
+		HashMap<String, Float> songAttributes = new HashMap<String, Float>();
+		songAttributes.put("duration", Float.parseFloat(foundSong.get("duration")));
+		songAttributes.put("dance", Float.parseFloat(foundSong.get("dance")));
+		songAttributes.put("acoustic", Float.parseFloat(foundSong.get("acoustic")));
+		songAttributes.put("loudness", Float.parseFloat(foundSong.get("loudness")));
+		songAttributes.put("speech", Float.parseFloat(foundSong.get("speech")));
+		songAttributes.put("bpm", Float.parseFloat(foundSong.get("bpm")));
+		songAttributes.put("liveness", Float.parseFloat(foundSong.get("liveness")));
+		songAttributes.put("energy", Float.parseFloat(foundSong.get("energy")));
+		setSliderValues("extra",songAttributes);
+		knobextra.setValue(Float.parseFloat(foundSong.get("valence")));
+
 	}
 
 	public static void main(String args[]) {
