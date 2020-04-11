@@ -10,32 +10,47 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.tcd.databases.Table;
 import com.tcd.gui.SplashScreen;
+import com.tcd.spotify.VisualizerSettings;
+import com.tcd.utils.SplashProvider;
 
 //https://bitbucket.org/xerial/sqlite-jdbc/src
 
 public class DatabaseManager {
 	private static Connection connection = null;
-
-	private static void executeInserts() throws ClassNotFoundException {
-		// load the sqlite-JDBC driver using the current class loader
+	private static Logger logger;
+	private static Statement statement;
+	private static ResultSet rs;
+	
+	public DatabaseManager() throws ClassNotFoundException, SQLException{
 		Class.forName("org.sqlite.JDBC");
+		connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+	}
+	
+	public Connection getConnection() {
+		return connection;
+	}
+
+
+	public void executeInserts(String csvFile, String tableName, String query) throws ClassNotFoundException {
 		String line = "";
-		// Connection connection = null;
 		try {
-			// create a database connection
-			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
-			statement.executeUpdate("drop table if exists spotify_decade");
-			statement.executeUpdate(
-					"create table spotify_decade (Number string, title string, artist string, genre string, year string, bpm string, energy string, dance string, loudness string, liveness string, valence string, duration string, acoustic string, speech string, popularity string)");
-			// statement.executeUpdate("insert into person values(1, 'leo')");
-			// statement.executeUpdate("insert into person values(2, 'yui')");
-
-			String csvFile = System.getProperty("user.dir") + File.separator + "data\\2010-2019.csv";
+			statement.executeUpdate("drop table if exists " +tableName);
+			//statement.executeUpdate(
+			//		"create table spotify_decade (Number string, title string, artist string, genre string, year string, bpm string, energy string, dance string, loudness string, liveness string, valence string, duration string, acoustic string, speech string, popularity string)");
+			statement.executeUpdate(query);
+			//String csvFile = System.getProperty("user.dir") + File.separator + "data\\2010-2019.csv";
 			BufferedReader br = null;
 
 			br = new BufferedReader(new FileReader(csvFile));
@@ -43,7 +58,7 @@ public class DatabaseManager {
 
 				// use comma as separator
 				String[] row = line.split(",");
-				String insertStatement = "insert into spotify_decade values(";
+				String insertStatement = "insert into "+tableName+" values(";
 				for (int i = 0; i < row.length; i++) {
 					insertStatement = insertStatement + '"' + row[i] + "\",";
 				}
@@ -64,65 +79,42 @@ public class DatabaseManager {
 		}
 	}
 
-	private static void executeQuery(String query) throws SQLException {
-		Statement statement = connection.createStatement();
-		ResultSet rs = statement.executeQuery(query);
-		while (rs.next()) {
-			// read the result set
-			System.out.println("title = " + rs.getString("title"));
-		}
-		rs.close();
+	public ResultSet executeQuery(String query) throws SQLException {
+		statement = connection.createStatement();
+		rs = statement.executeQuery(query);
+		return rs;
+	}
+
+	public void closeConnection() throws SQLException {
 		statement.close();
+		rs.close();
+		connection.close();
+		
 	}
+	
 
-	public static void invokeWithSplash(String function, String splashImage, String splashText, String query)
-			throws IOException, InterruptedException {
-		SplashScreen splash = new SplashScreen("img" + File.separator + "loading_gifs" + File.separator + splashImage,
-				splashText);
-
-		Thread thread1 = new Thread() {
-			public void run() {
-				splash.setVisible(true);
-			}
-
-			@Override
-			public void interrupt() {
-				// TODO Auto-generated method stub
-				super.interrupt();
-				splash.dispose();
-			}
-		};
-		Thread thread2 = new Thread() {
-			public void run() {
-				try {
-					switch (function) {
-					case "CREATE_DB":
-						executeInserts();
-						break;
-					case "EXECUTE_QUERY":
-						executeQuery(query);
-					}
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		thread1.start();
-		thread2.start();
-		thread2.join();
-		thread1.interrupt();
-		System.out.println("Finished~");
-	}
-
-	public static void main(String[] args) throws IOException, InterruptedException {
-		invokeWithSplash("CREATE_DB", "musicloading_small.gif", "Creating DB....", "");
-		invokeWithSplash("EXECUTE_QUERY", "musicloading_small.gif", "Running Query....",
-				"select * from spotify_decade where Number=\"80\"");
-
+	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+		//SplashProvider.invokeWithSplash("CREATE_DB", "musicloading_small.gif", "Creating DB....", "");
+		//SplashProvider.invokeWithSplash("EXECUTE_QUERY", "musicloading_small.gif", "Running Query....",
+		//		"select * from spotify_decade where Number=\"80\"");
+		
+		DatabaseManager dbManager = new DatabaseManager();
+		dbManager.executeInserts(VisualizerSettings.dataSet, VisualizerSettings.table_name, VisualizerSettings.query);
+		/*
+		String selectQuery = "select * from spotify_decade where rowid<=3";
+		ResultSet rs = dbManager.executeQuery(selectQuery);
+		while(rs.next()) {
+			System.out.println(rs.getString("spch"));
+		} */
+		
+		String maxQuery = "select max(bpm) m from spotify_decade";
+		ResultSet rs = dbManager.executeQuery(maxQuery);
+		while(rs.next()) {
+			System.out.println(rs.getString("m"));
+		}
+		dbManager.closeConnection();
 	}
 
 }
+
+
