@@ -1,5 +1,7 @@
 package com.tcd.spotify;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -8,6 +10,8 @@ import tracer.Tracer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +23,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -43,6 +54,7 @@ import controlP5.Slider;
 import controlP5.Slider2D;
 import controlP5.Textlabel;
 import g4p_controls.GControlMode;
+import g4p_controls.GOption;
 import g4p_controls.GSlider;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -56,6 +68,7 @@ import peasy.*;
 import peasy.org.apache.commons.math.*;
 import peasy.org.apache.commons.math.geometry.*;
 import gifAnimation.*;
+import jogamp.opengl.GLBufferObjectTracker.CreateStorageDispatch;
 
 public class YearCanvas extends PApplet {
 
@@ -97,8 +110,6 @@ public class YearCanvas extends PApplet {
 	private static HashMap<String, PVector> barPositions = VisualizerSettings.barPositions;
 	private static HashMap<String, LinkedList<GSlider>> sliders;
 	private static HashMap<String, LinkedList<Knob>> knobs;
-	float start = 1.9f;
-	float radians = (PI * (360 / 8)) / 180;
 	private static Properties maxminProps;
 	private static Button topButton, downButton, refreshButton;
 	private static Gif yearAnimation;
@@ -106,6 +117,8 @@ public class YearCanvas extends PApplet {
 	private static Slider2D slider2D;
 	private int slider2DValuePosition = 3;
 	private static LinkedList<String> yLabels = new LinkedList<String>();
+	private static boolean showLabels = VisualizerSettings.SHOW_RADIAL_GRAPH_LABELS;
+	private static boolean firstTime = true, tourViewActive = false;
 
 	YearCanvas() throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 		this.title = VisualizerSettings.TITLE;
@@ -222,10 +235,13 @@ public class YearCanvas extends PApplet {
 		 * genreButton = cp5.addButton("Genre").setPosition(width / 2 - 50, height -
 		 * 155) .setWidth(100).setHeight(20).setLabel("Show Genres").setValue(1);
 		 */
+
 	}
 
 	public void draw() {
 		background(216, 252, 231);
+		float start = 1.933333f;
+		float radians = (PI * (360 / 8)) / 180;
 		createBorders();
 		createYearSlider();
 		text("This is spotify", 10, 10);
@@ -397,30 +413,73 @@ public class YearCanvas extends PApplet {
 
 		HashMap<Integer, Integer> sliderToLabelMapping = new HashMap<Integer, Integer>(
 				VisualizerSettings.SLIDER_TO_LABEL_MAPPING);
-		// labels along slider circles
+
+		if (showLabels) {
+			createRadialGraphLabels(width / 2 - 350, height / 2 - 270, "position2", start, radians,
+					sliderToLabelMapping);
+			createRadialGraphLabels(width / 2, height / 2 - 270, "position1", start, radians, sliderToLabelMapping);
+			createRadialGraphLabels(width / 2 + 350, height / 2 - 270, "position3", start, radians,
+					sliderToLabelMapping);
+			createRadialGraphLabels(width / 2 - 700, height / 2 - 270, "findsongsliders", start, radians,
+					sliderToLabelMapping);
+			createRadialGraphLabels(width / 2 + 700, height / 2 - 270, "extra", start, radians, sliderToLabelMapping);
+		}
+		createFindYourSongView(getSong(songPropertiesInput, wholeTable).get(0));
+		create2DSliderYLabels(width / 2 + 400, height - 420, 420, 220);
+		workWith2DSliderValues(yLabels.get(slider2DValuePosition), slider2D.getArrayValue(0),
+				slider2D.getArrayValue(1));
+		
+		if(firstTime) {
+			firstTime=false;
+			BufferedImage url = null;
+			try {
+				url = ImageIO.read(new File("img\\loading_gifs\\musicloading_small.gif"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        Icon icon = new ImageIcon(url.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+			JFrame messageFrame = new JFrame("Message Frame");
+			messageFrame.setLocation(width/2,height/2);
+			messageFrame.setVisible(firstTime);
+			messageFrame.setAlwaysOnTop(true);
+			Object[] options = { "Yes, please", "No way!" };
+			int n = JOptionPane.showOptionDialog(messageFrame, "Would you like to take a tour?", "Take Tour",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, icon, // do not use a custom Icon
+					options, // the titles of buttons
+					options[1]);
+			if(n==0)
+				tourViewActive = true;
+		}
+		if(tourViewActive)
+			createTourView();
+	}
+	
+	private void createTourView() {
+		fill(50,200);
+		noStroke();
+		rect(0,0,width,height);
+	}
+
+	private void createRadialGraphLabels(float centerX, float centerY, String graphName, float start, float radians,
+			HashMap<Integer, Integer> sliderToLabelMapping) {
 		for (int i = 0; i < 8; i++) {
 			pushMatrix();
 			fill(0);
-			translate(width / 2 - 350, height / 2 - 270);
+			translate(centerX, centerY);
 			translate(150 * cos((start + (start + radians)) / 2), 150 * sin((start + (start + radians)) / 2));
 			rotate((start + (start + radians)) / 2 + PI / 2);
 			textAlign(CENTER);
 			int value = sliderToLabelMapping.get(i);
-			//char label = sliders.get("position2").get(value).tag.charAt(0);
-			String label = sliders.get("position2").get(value).tag;
-			String percentage = String.format("%.0f", (float) Math.round(sliders.get("position2").get(value).getValueF() * 100));
+			// char label = sliders.get("position2").get(value).tag.charAt(0);
+			String label = sliders.get(graphName).get(value).tag;
+			String percentage = String.format("%.0f",
+					(float) Math.round(sliders.get(graphName).get(value).getValueF() * 100));
 			textSize(9.5f);
 			text(label + ":" + percentage + "%", 0, 0);
 			start += radians;
 			popMatrix();
 		}
-
-		// drawSliderRectangles(yearSlider.getValue());
-		// image(yearAnimation,width/2-20,height-110);
-		createFindYourSongView(getSong(songPropertiesInput, wholeTable).get(0));
-		create2DSliderYLabels(width / 2 + 400, height - 420, 420, 220);
-		workWith2DSliderValues(yLabels.get(slider2DValuePosition), slider2D.getArrayValue(0),
-				slider2D.getArrayValue(1));
 	}
 
 	private void create2DSliderYLabels(float x, float y, float width, float height) {
@@ -958,7 +1017,7 @@ public class YearCanvas extends PApplet {
 		green = 180;
 		blue = 90;
 		fill(red, green, blue);
-		currentYear = Integer.parseInt(String.format("%.0f",yearSlider.getValue()));
+		currentYear = Integer.parseInt(String.format("%.0f", yearSlider.getValue()));
 		for (int i = 1; i <= numberOnRight; i++) {
 			currentYear++;
 			fill(red, green, blue);
@@ -1029,7 +1088,7 @@ public class YearCanvas extends PApplet {
 		songAttributes.put("bpm", Float.parseFloat(foundSong.get("bpm")));
 		songAttributes.put("liveness", Float.parseFloat(foundSong.get("liveness")));
 		songAttributes.put("energy", Float.parseFloat(foundSong.get("energy")));
-		setSliderValues("extra",songAttributes);
+		setSliderValues("extra", songAttributes);
 		knobextra.setValue(Float.parseFloat(foundSong.get("valence")));
 
 	}
