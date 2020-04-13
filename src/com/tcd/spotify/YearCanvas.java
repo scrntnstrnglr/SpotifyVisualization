@@ -1,6 +1,7 @@
 package com.tcd.spotify;
 
 import java.awt.Image;
+import java.awt.TextArea;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,7 @@ import controlP5.Knob;
 import controlP5.Range;
 import controlP5.Slider;
 import controlP5.Slider2D;
+import controlP5.Textarea;
 import controlP5.Textlabel;
 import g4p_controls.GControlMode;
 import g4p_controls.GOption;
@@ -110,15 +113,17 @@ public class YearCanvas extends PApplet {
 	private static HashMap<String, PVector> barPositions = VisualizerSettings.barPositions;
 	private static HashMap<String, LinkedList<GSlider>> sliders;
 	private static HashMap<String, LinkedList<Knob>> knobs;
-	private static Properties maxminProps;
+	private static Properties maxminProps,messageAreaProps;
 	private static Button topButton, downButton, refreshButton;
 	private static Gif yearAnimation;
 	private static Table wholeTable;
 	private static Slider2D slider2D;
-	private int slider2DValuePosition = 3;
+	private int slider2DValuePosition = 3, displayMessageCounter = 1;
 	private static LinkedList<String> yLabels = new LinkedList<String>();
 	private static boolean showLabels = VisualizerSettings.SHOW_RADIAL_GRAPH_LABELS;
 	private static boolean firstTime = true, tourViewActive = false;
+	private static Textarea messageAreaYearScroll, messageAreaPropToSong, messageAreaSongToProp, messageAreaMain;
+	private static LinkedHashMap<Integer,String> displayMessageArea;
 
 	YearCanvas() throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 		this.title = VisualizerSettings.TITLE;
@@ -128,7 +133,8 @@ public class YearCanvas extends PApplet {
 
 		maxminProps = new Properties();
 		maxminProps.load(new FileInputStream("properties" + File.separator + "maxminvalue.properties"));
-
+		messageAreaProps = new Properties();
+		messageAreaProps.load(new FileInputStream("properties" + File.separator + "messagearea.properties"));
 	}
 
 	private void loadDataSet() throws IOException, InterruptedException, ClassNotFoundException, SQLException {
@@ -158,6 +164,10 @@ public class YearCanvas extends PApplet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		messageAreaYearScroll = cp5.addTextarea("yearScroll");
+		messageAreaPropToSong = cp5.addTextarea("propToSong");
+		messageAreaSongToProp = cp5.addTextarea("songToProp");
+		messageAreaMain = cp5.addTextarea("areaMain");
 
 		yearSlider = cp5.addSlider("yearValue").setPosition(1, 2)
 				.setRange(Integer.parseInt(years.get(0)), Integer.parseInt(years.get(years.size() - 1))).setValue(2010)
@@ -236,13 +246,19 @@ public class YearCanvas extends PApplet {
 		 * 155) .setWidth(100).setHeight(20).setLabel("Show Genres").setValue(1);
 		 */
 
+		displayMessageArea = new LinkedHashMap<Integer,String>();
+		displayMessageArea.put(1,"messageAreaYearScroll");
+		displayMessageArea.put(2,"messageAreaMain");
+		displayMessageArea.put(3,"messageAreaPropToSong");
+		displayMessageArea.put(4,"messageAreaSongToProp");
 	}
 
 	public void draw() {
 		background(216, 252, 231);
 		float start = 1.933333f;
 		float radians = (PI * (360 / 8)) / 180;
-		createBorders();
+		if (!tourViewActive)
+			createBorders();
 		createYearSlider();
 		text("This is spotify", 10, 10);
 		// fill(255);
@@ -428,9 +444,9 @@ public class YearCanvas extends PApplet {
 		create2DSliderYLabels(width / 2 + 400, height - 420, 420, 220);
 		workWith2DSliderValues(yLabels.get(slider2DValuePosition), slider2D.getArrayValue(0),
 				slider2D.getArrayValue(1));
-		
-		if(firstTime) {
-			firstTime=false;
+
+		if (firstTime) {
+			firstTime = false;
 			BufferedImage url = null;
 			try {
 				url = ImageIO.read(new File("img\\loading_gifs\\musicloading_small.gif"));
@@ -438,9 +454,9 @@ public class YearCanvas extends PApplet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	        Icon icon = new ImageIcon(url.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+			Icon icon = new ImageIcon(url.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 			JFrame messageFrame = new JFrame("Message Frame");
-			messageFrame.setLocation(width/2,height/2);
+			messageFrame.setLocation(width / 2, height / 2);
 			messageFrame.setVisible(firstTime);
 			messageFrame.setAlwaysOnTop(true);
 			Object[] options = { "Yes, please", "No way!" };
@@ -448,17 +464,73 @@ public class YearCanvas extends PApplet {
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, icon, // do not use a custom Icon
 					options, // the titles of buttons
 					options[1]);
-			if(n==0)
+			if (n == 0)
 				tourViewActive = true;
 		}
-		if(tourViewActive)
-			createTourView();
+		if (tourViewActive) {
+			if(displayMessageArea.containsKey(displayMessageCounter))
+				createTourView(displayMessageArea.get(displayMessageCounter));
+			else {
+				tourViewActive=false;
+				messageAreaMain.setVisible(false);
+				messageAreaPropToSong.setVisible(false);
+				messageAreaSongToProp.setVisible(false);
+				messageAreaYearScroll.setVisible(false);
+			}
+		}
 	}
-	
-	private void createTourView() {
+
+	private void createTourView(String name) {
 		fill(50,200);
 		noStroke();
-		rect(0,0,width,height);
+		if(name == "messageAreaYearScroll") {
+			rect(0,0,width,height-150);
+			rect(0,height-50,width,50);
+			messageAreaMain.setVisible(false);
+			messageAreaPropToSong.setVisible(false);
+			messageAreaSongToProp.setVisible(false);
+			createMessageBox(width/2+100, height-150, 200, 100, messageAreaProps.getProperty(name), animationImg, messageAreaYearScroll);
+		}
+		if(name == "messageAreaMain") {
+			rect(0,0,430,500);
+			rect(0,500,630,300);
+			rect(0,800,width,200);
+			rect(width-430,0,430,500);
+			rect(width-630,500,630,300);
+			messageAreaPropToSong.setVisible(false);
+			messageAreaSongToProp.setVisible(false);
+			messageAreaYearScroll.setVisible(false);
+			createMessageBox(width/2-150, height/2+240, 350, 90, messageAreaProps.getProperty(name), animationImg, messageAreaMain);
+		}
+		if(name == "messageAreaPropToSong") {
+			rect(430,0,width-860,500);
+			rect(630,500,640,300);
+			rect(0,800,width,200);
+			rect(width-430,0,430,500);
+			rect(width-630,500,630,300);
+			messageAreaMain.setVisible(false);
+			messageAreaSongToProp.setVisible(false);
+			messageAreaYearScroll.setVisible(false);
+			createMessageBox(width/2-520, height/2-85, 200, 115, messageAreaProps.getProperty(name), animationImg, messageAreaPropToSong);
+		}
+		if(name == "messageAreaSongToProp") {
+			rect(0,0,430,500);
+			rect(0,500,630,300);
+			rect(430,0,width-860,500);
+			rect(630,500,640,300);
+			rect(0,800,width,200);
+			messageAreaMain.setVisible(false);
+			messageAreaPropToSong.setVisible(false);
+			messageAreaYearScroll.setVisible(false);
+			createMessageBox(width/2+240, height/2-85, 220, 115, messageAreaProps.getProperty(name), animationImg, messageAreaSongToProp);
+		}
+	}
+
+	private void createMessageBox(float x, float y, int width, int height, String message, PImage img,
+			Textarea messageArea) {
+		messageArea.setPosition(x, y).setSize(width, height)
+				.setFont(createFont("arial", 12)).setColor(color(255)).setLineHeight(14)
+				.setColorBackground(color(0)).setColorForeground(color(0)).setText(message).setVisible(true);
 	}
 
 	private void createRadialGraphLabels(float centerX, float centerY, String graphName, float start, float radians,
@@ -509,6 +581,7 @@ public class YearCanvas extends PApplet {
 			slider2DValuePosition = newValue;
 		}
 	}
+	
 
 	public List<HashMap<String, String>> getSong(HashMap<String, Float> propertyValues, Table dataSet) {
 		float offset = 1.0f;
@@ -924,6 +997,8 @@ public class YearCanvas extends PApplet {
 	}
 
 	private void createBorders() {
+		stroke(0);
+		strokeWeight(4);
 		line(80, 40, 80, height - 150);
 		line(80, 40, 420, 40);
 		line(420, 40, 420, height / 2);
@@ -944,12 +1019,18 @@ public class YearCanvas extends PApplet {
 	public void mouseWheel(MouseEvent event) {
 		// TODO Auto-generated method stub
 		super.mouseWheel(event);
-		if (mouseY >= 25 && !knobfindyourSong.isActive()) {
+		if (mouseY >= 25 && !knobfindyourSong.isActive() && !tourViewActive) {
 			float currentValue = yearSlider.getValue();
 			float newValue = currentValue - event.getCount();
 			if (newValue >= 2010 && newValue <= 2019) {
 				yearSlider.setValue(newValue);
 			}
+		}else if(tourViewActive) {
+			displayMessageCounter += event.getCount();
+			if(displayMessageCounter==5)
+				displayMessageCounter=1;
+			else if(displayMessageCounter==0)
+				displayMessageCounter=4;
 		}
 	}
 
