@@ -26,6 +26,8 @@ public class VisualizerSettings {
 	public final static HashMap<String,PVector> barPositions = new HashMap<String,PVector>(loadBarPositions());
 	public final static int BACKGROUND_COLOR = 0;
 	public final static boolean SHOW_RADIAL_GRAPH_LABELS = true;
+	public final static String tipText = "Press 'N' for next tip and 'P' for previous tip";
+	public final static String hintText = "Click for guided tour";
 	
 	private static HashMap<String,PVector> loadBarPositions(){
 		HashMap<String,PVector> positions = new HashMap<String,PVector>();
