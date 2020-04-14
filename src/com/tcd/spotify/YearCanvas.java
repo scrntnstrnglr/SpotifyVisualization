@@ -39,7 +39,7 @@ import org.w3c.dom.css.ViewCSS;
 
 import com.tcd.databases.DTable;
 import com.tcd.databases.sample.DatabaseManager;
-
+import com.tcd.gui.TipScreen;
 import com.tcd.utils.SplashProvider;
 
 import controlP5.Bang;
@@ -55,11 +55,13 @@ import controlP5.Range;
 import controlP5.Slider;
 import controlP5.Slider2D;
 import controlP5.Textarea;
+import controlP5.Textfield;
 import controlP5.Textlabel;
 import controlP5.Toggle;
 import g4p_controls.GControlMode;
 import g4p_controls.GOption;
 import g4p_controls.GSlider;
+import g4p_controls.GTextArea;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -123,7 +125,7 @@ public class YearCanvas extends PApplet {
 	private static LinkedList<String> yLabels = new LinkedList<String>();
 	private static boolean showLabels = VisualizerSettings.SHOW_RADIAL_GRAPH_LABELS;
 	private static boolean firstTime = true, tourViewActive = false;
-	private static Textlabel messageAreaYearScroll, messageAreaPropToSong, messageAreaSongToProp, messageAreaMain;
+	private static GTextArea messageAreaYearScroll, messageAreaPropToSong, messageAreaSongToProp, messageAreaMain;
 	private static LinkedHashMap<Integer, String> displayMessageArea;
 	private static Toggle tourToggleButton;
 	private static Textlabel nextTextLabel, prevTextLabel, nextCaption, prevCaption;
@@ -167,11 +169,20 @@ public class YearCanvas extends PApplet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		messageAreaYearScroll = cp5.addTextlabel("yearScroll");
-		messageAreaPropToSong = cp5.addTextlabel("propToSong");
-		messageAreaSongToProp = cp5.addTextlabel("songToProp");
-		messageAreaMain = cp5.addTextlabel("areaMain");
+		
+		/*
+		messageAreaYearScroll = cp5.addTextfield("yearScroll").setColorBackground(color(0)).setColorForeground(color(255)).setColorLabel(color(255));
+		messageAreaPropToSong = cp5.addTextfield("propToSong").setColorBackground(color(0)).setColorForeground(color(255)).setColorLabel(color(255));
+		messageAreaSongToProp = cp5.addTextfield("songToProp").setColorBackground(color(0)).setColorForeground(color(255)).setColorLabel(color(255));
+		messageAreaMain = cp5.addTextfield("areaMain").setColorBackground(color(0)).setColorForeground(color(255)).setColorLabel(color(255)); */
+		
+		messageAreaYearScroll = new GTextArea(this, 10,10,10,10); 
+		messageAreaPropToSong = new GTextArea(this, 10,10,10,10);
+		messageAreaSongToProp = new GTextArea(this, 10,10,10,10);
+		messageAreaMain =  new GTextArea(this, 10,10,10,10);
 
+		
+		
 		yearSlider = cp5.addSlider("yearValue").setPosition(1, 2)
 				.setRange(Integer.parseInt(years.get(0)), Integer.parseInt(years.get(years.size() - 1))).setValue(2010)
 				.setNumberOfTickMarks(10).setSliderMode(Slider.FIX).setBroadcast(true).setCaptionLabel("")
@@ -513,7 +524,7 @@ public class YearCanvas extends PApplet {
 			messageAreaMain.setVisible(false);
 			messageAreaPropToSong.setVisible(false);
 			messageAreaSongToProp.setVisible(false);
-			createMessageBox(width / 2 + 100, height - 150, 200, 100, messageAreaProps.getProperty(name), animationImg,	messageAreaYearScroll);
+			createMessageBox(width / 2 + 140, height - 150, 200, 100, 1, messageAreaProps.getProperty(name),	messageAreaYearScroll);
 		}
 		if (name == "messageAreaMain") {
 			rect(0, 40, 430, 460);
@@ -524,8 +535,7 @@ public class YearCanvas extends PApplet {
 			messageAreaPropToSong.setVisible(false);
 			messageAreaSongToProp.setVisible(false);
 			messageAreaYearScroll.setVisible(false);
-			createMessageBox(width / 2 - 150, height / 2 + 240, 350, 90, messageAreaProps.getProperty(name),
-					animationImg, messageAreaMain);
+			createMessageBox(width / 2 - 150, height / 2 + 240, 350, 90,2, messageAreaProps.getProperty(name), messageAreaMain);
 		}
 		if (name == "messageAreaPropToSong") {
 			rect(430, 40, width - 860, 460);
@@ -536,8 +546,7 @@ public class YearCanvas extends PApplet {
 			messageAreaMain.setVisible(false);
 			messageAreaSongToProp.setVisible(false);
 			messageAreaYearScroll.setVisible(false);
-			createMessageBox(width / 2 - 520, height / 2 - 85, 200, 115, messageAreaProps.getProperty(name),
-					animationImg, messageAreaPropToSong);
+			createMessageBox(width / 2 - 520, height / 2 - 85, 200, 115,3, messageAreaProps.getProperty(name), messageAreaPropToSong);
 		}
 		if (name == "messageAreaSongToProp") {
 			rect(0, 40, 430, 460);
@@ -548,16 +557,15 @@ public class YearCanvas extends PApplet {
 			messageAreaMain.setVisible(false);
 			messageAreaPropToSong.setVisible(false);
 			messageAreaYearScroll.setVisible(false);
-			createMessageBox(width / 2 + 240, height / 2 - 85, 220, 115, messageAreaProps.getProperty(name),
-					animationImg, messageAreaSongToProp);
+			createMessageBox(width / 2 + 240, height / 2 - 85, 220, 115,4, messageAreaProps.getProperty(name), messageAreaSongToProp);
 		}
 	}
 
-	private void createMessageBox(float x, float y, int width, int height, String message, PImage img,
-			Textlabel messageArea) {
-		messageArea.setPosition(x+40,y+20).setSize(width, height).setFont(createFont("Microsoft Yi Baiti", 22)).setColor(color(0))
-				.setColorBackground(color(0)).setColorForeground(color(0)).setText(message)
-				.setVisible(true);
+	private void createMessageBox(int x, int y, int width, int height, int tipNumber, String message, GTextArea messageArea) {
+/*
+		messageArea.setPosition(x,y).setSize(width, height).setFont(createFont("Microsoft Yi Baiti", 18))
+		.setColorBackground(color(0)).setColorForeground(color(255)).setLock(true)
+		.setText("Tool Tip "+tipNumber+"\n"+message).setVisible(true).setCaptionLabel(""); */
 	}
 
 	private void createRadialGraphLabels(float centerX, float centerY, String graphName, float start, float radians,
@@ -1208,8 +1216,10 @@ public class YearCanvas extends PApplet {
 		songAttributes.put("energy", Float.parseFloat(foundSong.get("energy")));
 		setSliderValues("extra", songAttributes);
 		knobextra.setValue(Float.parseFloat(foundSong.get("valence")));
+		
 
 	}
+
 
 	public static void main(String args[]) {
 		// logger.info("Initializing Visualization");
