@@ -104,7 +104,7 @@ public class YearCanvas extends PApplet {
 	private static Bang labelArtist1, labelArtist2, labelArtist3;
 	private static Textlabel labelTitle1, labelTitle2, labelTitle3;
 	private static Textlabel labelGenre1, labelGenre2, labelGenre3;
-	private static PImage webImg, photo, photo1;
+	private static PImage webImg, photo, photo1, logo;
 	private static final float radius = VisualizerSettings.ECLIPSE_RADIUS;
 	private static GSlider sdr, sdr2, sdr3, sdr4, sdr5, sdr6, sdr7, sdr8;
 	private static Knob knob1, knob2, knob3, knobfindyourSong, knobextra;
@@ -118,7 +118,7 @@ public class YearCanvas extends PApplet {
 	private static HashMap<String, LinkedList<Knob>> knobs;
 	private static Properties maxminProps, messageAreaProps;
 	private static Button topButton, downButton, refreshButton;
-	private static Gif yearAnimation;
+	private static Gif pointerDown,pointerUp,pointerLeft,pointerRight;
 	private static Table wholeTable;
 	private static Slider2D slider2D;
 	private int slider2DValuePosition = 3, displayMessageCounter = 1;
@@ -128,7 +128,7 @@ public class YearCanvas extends PApplet {
 	private static GTextArea messageAreaYearScroll, messageAreaPropToSong, messageAreaSongToProp, messageAreaMain;
 	private static LinkedHashMap<Integer, String> displayMessageArea;
 	private static Toggle tourToggleButton;
-	private static Textlabel nextTextLabel, prevTextLabel, nextCaption, prevCaption;
+	private static Textlabel nextTextLabel, prevTextLabel, nextCaption, prevCaption, valenceLabel1,valenceLabel2,valenceLabel3,valenceLabel4,valenceLabel5;
 
 	YearCanvas() throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 		this.title = VisualizerSettings.TITLE;
@@ -144,9 +144,6 @@ public class YearCanvas extends PApplet {
 
 	private void loadDataSet() throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 		logger.info("Loading data...");
-		// SplashProvider.invokeWithSplash("CREATE_DB",
-		// VisualizerSettings.loadDataInputs, "musicloading_small.gif","Loading....",
-		// "");
 		dbManager = new DatabaseManager();
 		dbManager.executeInserts(VisualizerSettings.dataSet, VisualizerSettings.table_name, VisualizerSettings.query);
 		logger.info("Database Created!");
@@ -170,18 +167,13 @@ public class YearCanvas extends PApplet {
 			e.printStackTrace();
 		}
 		
-		/*
-		messageAreaYearScroll = cp5.addTextfield("yearScroll").setColorBackground(color(0)).setColorForeground(color(255)).setColorLabel(color(255));
-		messageAreaPropToSong = cp5.addTextfield("propToSong").setColorBackground(color(0)).setColorForeground(color(255)).setColorLabel(color(255));
-		messageAreaSongToProp = cp5.addTextfield("songToProp").setColorBackground(color(0)).setColorForeground(color(255)).setColorLabel(color(255));
-		messageAreaMain = cp5.addTextfield("areaMain").setColorBackground(color(0)).setColorForeground(color(255)).setColorLabel(color(255)); */
 		
-		messageAreaYearScroll = new GTextArea(this, 10,10,10,10); 
-		messageAreaPropToSong = new GTextArea(this, 10,10,10,10);
-		messageAreaSongToProp = new GTextArea(this, 10,10,10,10);
-		messageAreaMain =  new GTextArea(this, 10,10,10,10);
-
-		
+		logo = loadImage("img\\arrows\\logo.png");
+		logo.resize(250, 40);
+		messageAreaYearScroll = new GTextArea(this, 0,0,width-400,40); 
+		messageAreaPropToSong = new GTextArea(this, 0,0,width-400,40);
+		messageAreaSongToProp = new GTextArea(this, 0,0,width-400,40);
+		messageAreaMain =  new GTextArea(this,0,0,width-400,40);
 		
 		yearSlider = cp5.addSlider("yearValue").setPosition(1, 2)
 				.setRange(Integer.parseInt(years.get(0)), Integer.parseInt(years.get(years.size() - 1))).setValue(2010)
@@ -199,35 +191,35 @@ public class YearCanvas extends PApplet {
 				.setRadius(radius).setNumberOfTickMarks(100).setTickMarkLength(1).snapToTickMarks(true).hideTickMarks()
 				.setColorForeground(color(255)).setColorBackground(color(0, 160, 100))
 				.setColorActive(color(255, 255, 0)).setDragDirection(Knob.VERTICAL).setDecimalPrecision(0).setLock(true)
-				.setCaptionLabel("");
+				.setCaptionLabel("").setMax(100);
 
 		sliders = getSliderMap(sliders, "position1", width / 2, height / 2 - 270, false);
 		knob1 = cp5.addKnob("knobValue1").setRange(0, 100).setValue(50).setPosition(width / 2 - 40, height / 2 - 312)
 				.setRadius(radius).setNumberOfTickMarks(100).setTickMarkLength(1).snapToTickMarks(true).hideTickMarks()
 				.setColorForeground(color(255)).setColorBackground(color(0, 160, 100))
 				.setColorActive(color(255, 255, 0)).setDragDirection(Knob.VERTICAL).setDecimalPrecision(0).setLock(true)
-				.setCaptionLabel("");
+				.setCaptionLabel("").setMax(100);
 
 		sliders = getSliderMap(sliders, "position3", width / 2 + 350, height / 2 - 270, false);
 		knob3 = cp5.addKnob("knobValue3").setRange(0, 100).setValue(70).setPosition(width / 2 + 308, height / 2 - 312)
 				.setRadius(radius).setNumberOfTickMarks(100).setTickMarkLength(1).snapToTickMarks(true).hideTickMarks()
 				.setColorForeground(color(255)).setColorBackground(color(0, 160, 100))
 				.setColorActive(color(255, 255, 0)).setDragDirection(Knob.HORIZONTAL).setDecimalPrecision(0)
-				.setLock(true).setCaptionLabel("");
+				.setLock(true).setCaptionLabel("").setMax(100);
 
 		sliders = getSliderMap(sliders, "findsongsliders", width / 2 - 700, height / 2 - 270, true);
 		knobfindyourSong = cp5.addKnob("knobfindyoursong").setRange(0, 100).setValue(50)
 				.setPosition(width / 2 - 741, height / 2 - 312).setRadius(radius).setNumberOfTickMarks(100)
 				.setTickMarkLength(1).snapToTickMarks(true).hideTickMarks().setColorForeground(color(255))
 				.setColorBackground(color(0, 160, 100)).setColorActive(color(255, 255, 0))
-				.setDragDirection(Knob.VERTICAL).setDecimalPrecision(0).setLock(false).setCaptionLabel("").setValue(80);
+				.setDragDirection(Knob.VERTICAL).setDecimalPrecision(0).setLock(false).setCaptionLabel("").setValue(80).setMax(100);
 
 		sliders = getSliderMap(sliders, "extra", width / 2 + 700, height / 2 - 270, true);
 		knobextra = cp5.addKnob("knobextra").setRange(0, 100).setValue(50)
 				.setPosition(width / 2 + 660, height / 2 - 312).setRadius(radius).setNumberOfTickMarks(100)
 				.setTickMarkLength(1).snapToTickMarks(true).hideTickMarks().setColorForeground(color(255))
 				.setColorBackground(color(0, 160, 100)).setColorActive(color(255, 255, 0))
-				.setDragDirection(Knob.VERTICAL).setDecimalPrecision(0).setLock(true).setCaptionLabel("").setValue(0);
+				.setDragDirection(Knob.VERTICAL).setDecimalPrecision(0).setLock(true).setCaptionLabel("").setValue(0).setMax(100);
 
 		slider2D = cp5.addSlider2D("slider2d").setPosition(width / 2 + 400, height - 420).setSize(420, 220)
 				.setMinX(2010).setMaxX(2019).setMinY(10).setMaxY(0).setValue(2014, 5).setColorValue(0)
@@ -255,6 +247,17 @@ public class YearCanvas extends PApplet {
 		
 		nextTextLabel = cp5.addTextlabel("tip").setSize(100, 100).setText(VisualizerSettings.hintText).setVisible(true).setColor(color(0))
 				.setFont(createFont("Arial", 15)).setVisible(true);
+		
+		valenceLabel1 = cp5.addTextlabel("Valence1").setPosition(227,220).setSize(100, 100).setText("Valence").setVisible(true).setColor(color(0))
+				.setFont(createFont("Arial", 10)).setVisible(true).setColor(color(255));
+		valenceLabel2 = cp5.addTextlabel("Valence2").setPosition(577,220).setSize(100, 100).setText("Valence").setVisible(true).setColor(color(0))
+				.setFont(createFont("Arial", 10)).setVisible(true).setColor(color(255));
+		valenceLabel3 = cp5.addTextlabel("Valence3").setPosition(927,220).setSize(100, 100).setText("Valence").setVisible(true).setColor(color(0))
+				.setFont(createFont("Arial", 10)).setVisible(true).setColor(color(255));
+		valenceLabel4 = cp5.addTextlabel("Valence4").setPosition(1277,220).setSize(100, 100).setText("Valence").setVisible(true).setColor(color(0))
+				.setFont(createFont("Arial", 10)).setVisible(true).setColor(color(255));
+		valenceLabel5 = cp5.addTextlabel("Valence5").setPosition(1627,220).setSize(100, 100).setText("Valence").setVisible(true).setColor(color(0))
+				.setFont(createFont("Arial", 10)).setVisible(true).setColor(color(255));
 
 		yLabels.add("Tempo");
 		yLabels.add("Energy");
@@ -263,10 +266,17 @@ public class YearCanvas extends PApplet {
 		yLabels.add("Loudness");
 		yLabels.add("Liveness");
 		yLabels.add("Valence");
-		// animationImg = loadImage("img\\loading_gifs\\original.gif");
-		// animationImg.resize(50, 50);
-		yearAnimation = new Gif(this, "img\\loading_gifs\\music-resized.gif");
-		yearAnimation.play();
+		
+		//animationImg = loadImage("img\\loading_gifs\\pointer.gif");
+		//animationImg.resize(50, 50);
+		pointerDown = new Gif(this, "img\\loading_gifs\\pointer-resized.gif");
+		pointerUp = new Gif(this, "img\\loading_gifs\\pointer-up.gif");
+		pointerLeft = new Gif(this, "img\\loading_gifs\\pointer-left.gif");
+		pointerRight = new Gif(this, "img\\loading_gifs\\pointer-right.gif");
+		pointerDown.play();
+		pointerUp.play();
+		pointerLeft.play();
+		pointerRight.play();
 		/*
 		 * genreButton = cp5.addButton("Genre").setPosition(width / 2 - 50, height -
 		 * 155) .setWidth(100).setHeight(20).setLabel("Show Genres").setValue(1);
@@ -281,12 +291,12 @@ public class YearCanvas extends PApplet {
 
 	public void draw() {
 		background(216, 252, 231);
+		//image(logo,30,0);
 		float start = 1.933333f;
 		float radians = (PI * (360 / 8)) / 180;
 		if (!tourViewActive)
 			createBorders();
 		createYearSlider();
-		text("This is spotify", 10, 10);
 		// fill(255);
 		// stroke(55, 210, 4);
 		// fill(255);
@@ -365,6 +375,9 @@ public class YearCanvas extends PApplet {
 		pushMatrix();
 		// stroke(10);
 		// rect(5,5,300,100);
+		float sum = 0.0f;
+		for(float val : genreBarData.values())
+			sum+=val;
 		itr = genreBarData.entrySet().iterator();
 		HashMap<String, LinkedList<Float>> genreLocation = new HashMap<String, LinkedList<Float>>();
 		float startx = 1, starty = height - 50, red = 211, green = 84, blue = 0;
@@ -375,8 +388,9 @@ public class YearCanvas extends PApplet {
 			float gx = (genreBarData.get(key) / 2 + startx);
 			float gy = starty + 30;
 			textAlign(CENTER);
-
-			text(key, gx, gy);
+			float perc = (genreBarData.get(key)/sum)*100;
+			String percString = String.format("%.1f", perc);
+			text(key+":\n"+percString+"%", gx, gy-10);
 			LinkedList<Float> genreLocationList = new LinkedList<Float>();
 			genreLocationList.add(gx);
 			genreLocationList.add(gy);
@@ -399,9 +413,9 @@ public class YearCanvas extends PApplet {
 		pop = thisYearTable.getData("popularity", 2);
 		textAlign(CENTER);
 		// fill(255);
-		text(textTitle, width / 2 - 190, height - 260);
-		text(textArtist, width / 2 - 190, height - 245);
-		text(pop, width / 2 - 190, height - 500);
+		text(textTitle, width / 2 - 190, height - 267);
+		text(textArtist, width / 2 - 190, height - 252);
+		text("Popularity: "+pop+"%", width / 2 - 190,height - 237);
 		noFill();
 		// stroke(255);
 		bezier(width / 2 - 190, height - 235, width / 2 - 190, height - 150, width / 2, height - 245, width / 2,
@@ -411,9 +425,11 @@ public class YearCanvas extends PApplet {
 		// textAlign(CENTER);
 		textTitle = thisYearTable.getData("title", 1);
 		textArtist = thisYearTable.getData("artist", 1);
+		pop = thisYearTable.getData("popularity", 1);
 		// fill(255);
-		text(textTitle, width / 2, height - 260);
-		text(textArtist, width / 2, height - 245);
+		text(textTitle, width / 2, height - 267);
+		text(textArtist, width / 2, height - 252);
+		text("Popularity: "+pop+"%", width / 2,height - 237);
 		noFill();
 		// stroke(255);
 		bezier(width / 2, height - 235, width / 2, height - 150, width / 2, height - 245, width / 2, height - 150);
@@ -422,10 +438,12 @@ public class YearCanvas extends PApplet {
 
 		textTitle = thisYearTable.getData("title", 3);
 		textArtist = thisYearTable.getData("artist", 3);
+		pop = thisYearTable.getData("popularity", 3);
 		// textAlign(CENTER);
 		// fill(255);
-		text(textTitle, width / 2 + 160, height - 260);
-		text(textArtist, width / 2 + 160, height - 245);
+		text(textTitle, width / 2 + 160, height - 267);
+		text(textArtist, width / 2 + 160, height - 252);
+		text("Popularity: "+pop+"%", width / 2 + 160,height - 237);
 		noFill();
 		// stroke(255);
 		bezier(width / 2 + 160, height - 235, width / 2 + 160, height - 150, width / 2, height - 245, width / 2,
@@ -471,20 +489,6 @@ public class YearCanvas extends PApplet {
 		workWith2DSliderValues(yLabels.get(slider2DValuePosition), slider2D.getArrayValue(0),
 				slider2D.getArrayValue(1));
 
-		/*
-		 * if (firstTime) { firstTime = false; BufferedImage url = null; try { url =
-		 * ImageIO.read(new File("img\\loading_gifs\\musicloading_small.gif")); } catch
-		 * (IOException e) { // TODO Auto-generated catch block e.printStackTrace(); }
-		 * Icon icon = new ImageIcon(url.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-		 * JFrame messageFrame = new JFrame("Message Frame");
-		 * messageFrame.setLocation(width / 2, height / 2);
-		 * messageFrame.setVisible(firstTime); messageFrame.setAlwaysOnTop(true);
-		 * Object[] options = { "Yes, please", "No way!" }; int n =
-		 * JOptionPane.showOptionDialog(messageFrame, "Would you like to take a tour?",
-		 * "Take Tour", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, icon,
-		 * // do not use a custom Icon options, // the titles of buttons options[1]); if
-		 * (n == 0) tourViewActive = true; }
-		 */
 		if (tourToggleButton.getBooleanValue()) {
 			tourViewActive = true;
 			nextTextLabel.setText(VisualizerSettings.tipText);
@@ -507,6 +511,7 @@ public class YearCanvas extends PApplet {
 			messageAreaSongToProp.setVisible(false);
 			messageAreaYearScroll.setVisible(false);
 		}
+		
 	}
 
 	private void createTourView(String name) {
@@ -524,6 +529,7 @@ public class YearCanvas extends PApplet {
 			messageAreaMain.setVisible(false);
 			messageAreaPropToSong.setVisible(false);
 			messageAreaSongToProp.setVisible(false);
+			image(pointerDown,width/2-70,height-220);
 			createMessageBox(width / 2 + 140, height - 150, 200, 100, 1, messageAreaProps.getProperty(name),	messageAreaYearScroll);
 		}
 		if (name == "messageAreaMain") {
@@ -535,6 +541,7 @@ public class YearCanvas extends PApplet {
 			messageAreaPropToSong.setVisible(false);
 			messageAreaSongToProp.setVisible(false);
 			messageAreaYearScroll.setVisible(false);
+			image(pointerUp,width/2-70,height-140);
 			createMessageBox(width / 2 - 150, height / 2 + 240, 350, 90,2, messageAreaProps.getProperty(name), messageAreaMain);
 		}
 		if (name == "messageAreaPropToSong") {
@@ -546,6 +553,7 @@ public class YearCanvas extends PApplet {
 			messageAreaMain.setVisible(false);
 			messageAreaSongToProp.setVisible(false);
 			messageAreaYearScroll.setVisible(false);
+			image(pointerUp,200,height-140);
 			createMessageBox(width / 2 - 520, height / 2 - 85, 200, 115,3, messageAreaProps.getProperty(name), messageAreaPropToSong);
 		}
 		if (name == "messageAreaSongToProp") {
@@ -557,15 +565,15 @@ public class YearCanvas extends PApplet {
 			messageAreaMain.setVisible(false);
 			messageAreaPropToSong.setVisible(false);
 			messageAreaYearScroll.setVisible(false);
+			image(pointerUp,width-300,height-140);
 			createMessageBox(width / 2 + 240, height / 2 - 85, 220, 115,4, messageAreaProps.getProperty(name), messageAreaSongToProp);
 		}
 	}
 
 	private void createMessageBox(int x, int y, int width, int height, int tipNumber, String message, GTextArea messageArea) {
-/*
-		messageArea.setPosition(x,y).setSize(width, height).setFont(createFont("Microsoft Yi Baiti", 18))
-		.setColorBackground(color(0)).setColorForeground(color(255)).setLock(true)
-		.setText("Tool Tip "+tipNumber+"\n"+message).setVisible(true).setCaptionLabel(""); */
+		messageArea.setText(message);
+		messageArea.setVisible(true);
+		messageArea.setLocalColorScheme(100);
 	}
 
 	private void createRadialGraphLabels(float centerX, float centerY, String graphName, float start, float radians,
@@ -755,6 +763,7 @@ public class YearCanvas extends PApplet {
 		strokeWeight(4);
 		rect(imgX, imgY, imgWidth, imgHeight, 10);
 		image(artistImage, imgX, imgY);
+		textSize(12);
 		text("Artist: " + artist, imgX + imgWidth + 10, imgY + 15);
 		text("Title: " + title, imgX + imgWidth + 10, imgY + 35);
 		text("Genre: " + genre, imgX + imgWidth + 10, imgY + 55);
@@ -1159,12 +1168,12 @@ public class YearCanvas extends PApplet {
 			green -= 20;
 			// blue+=40;
 		}
-		fill(255);
+		fill(216, 252, 231);
 		arc(width / 2, height - 50, 100, 100, PI, TWO_PI, PIE);
 		fill(100, 250, 90);
 		stroke(1);
 		arc(width / 2, height - 50, 170, 170, PI + (3 * QUARTER_PI / 2), TWO_PI - (3 * QUARTER_PI / 2), PIE);
-		fill(255);
+		fill(216, 252, 231);
 		stroke(1);
 		arc(width / 2, height - 50, 120, 120, PI + (3 * QUARTER_PI / 2), TWO_PI - (3 * QUARTER_PI / 2), PIE);
 		fill(0);
