@@ -9,7 +9,7 @@ public class VisualizerSettings {
 
 	public final static int SCREEN_WIDTH = 1900;
 	public final static int SCREEN_HEIGHT = 940;
-	public final static String TITLE = "SPOTIFY TOP 100";
+	public final static String TITLE = "SPOTIFY PAST DECADE";
 	public final static HashMap<String, Object> loadDataInputs = new HashMap<String, Object>(loadDataInputsFunction());
 	public final static String dataSet = System.getProperty("user.dir") + File.separator + "data\\2010-2019-normalised.csv";
 	public final static String table_name = "spotify_decade";

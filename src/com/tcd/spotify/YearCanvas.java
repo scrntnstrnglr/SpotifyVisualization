@@ -94,7 +94,6 @@ public class YearCanvas extends PApplet {
 	private static int SCREEN_WIDTH, SCREEN_HEIGHT;
 	private final String title;
 	private static ControlP5 cp5;
-	private static Canvas cc;
 	private static Slider yearSlider;
 	private static String yearValue = "2010";
 	private static Knob yearKnob;
@@ -167,6 +166,8 @@ public class YearCanvas extends PApplet {
 	}
 
 	public void setup() {
+		surface.setTitle(VisualizerSettings.TITLE);
+		surface.setResizable(false);
 		cp5 = new ControlP5(this);
 		LinkedList<String> years = new LinkedList<String>();
 		try {
@@ -183,6 +184,7 @@ public class YearCanvas extends PApplet {
 		messageAreaPropToSong = new GTextArea(this, 0,0,width-400,40);
 		messageAreaSongToProp = new GTextArea(this, 0,0,width-400,40);
 		messageAreaMain =  new GTextArea(this,0,0,width-400,40);
+		
 		
 		yearSlider = cp5.addSlider("yearValue").setPosition(1, 2)
 				.setRange(Integer.parseInt(years.get(0)), Integer.parseInt(years.get(years.size() - 1))).setValue(2010)
@@ -1072,17 +1074,49 @@ public class YearCanvas extends PApplet {
 	public void keyPressed() {
 		if (tourViewActive) {
 			if (key == 'N'|| key == 'n') {
+				logger.info("N key pressed");
 				displayMessageCounter++;
 				if (displayMessageCounter == 5)
 					displayMessageCounter = 1;
 			} else if (key == 'p' || key == 'P') {
+				logger.info("P Key pressed");
 				displayMessageCounter--;
 				if (displayMessageCounter == 0)
 					displayMessageCounter = 4;
+			}else if (keyCode == LEFT) {
+				logger.info("Left key pressed");
+				float currentValue = yearSlider.getValue();
+				float newValue = ++currentValue;
+				if(newValue>=2010 && newValue<=2019) {
+					yearSlider.setValue(newValue);
+				}
+			} else if(keyCode == RIGHT) {
+				logger.info("Right key pressed");
+				float currentValue = yearSlider.getValue();
+				float newValue = --currentValue;
+				System.out.println(newValue);
+				if(newValue>=2010 && newValue<=2019) {
+					yearSlider.setValue(newValue);
+				}
 			}
 		}
 		else {
-			logger.info("Tour view is not activated!!");
+			if (keyCode == LEFT) {
+				logger.info("Left key pressed");
+				float currentValue = yearSlider.getValue();
+				float newValue = ++currentValue;
+				if(newValue>=2010 && newValue<=2019) {
+					yearSlider.setValue(newValue);
+				}
+			} else if(keyCode == RIGHT) {
+				logger.info("Right key pressed");
+				float currentValue = yearSlider.getValue();
+				float newValue = --currentValue;
+				System.out.println(newValue);
+				if(newValue>=2010 && newValue<=2019) {
+					yearSlider.setValue(newValue);
+				}
+			}
 		}
 	}
 
@@ -1244,6 +1278,8 @@ public class YearCanvas extends PApplet {
 			logger.error(e.getStackTrace());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			logger.error(e.getStackTrace());
+		} catch (Exception e) {
 			logger.error(e.getStackTrace());
 		}
 	}
