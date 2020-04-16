@@ -134,8 +134,6 @@ public class YearCanvas extends PApplet {
 		this.title = VisualizerSettings.TITLE;
 		logger = Logger.getLogger(YearCanvas.class);
 		PropertyConfigurator.configure("properties" + File.separator + "log4j.properties");
-		loadDataSet();
-
 		maxminProps = new Properties();
 		maxminProps.load(new FileInputStream("properties" + File.separator + "maxminvalue.properties"));
 		messageAreaProps = new Properties();
@@ -144,8 +142,14 @@ public class YearCanvas extends PApplet {
 
 	private void loadDataSet() throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 		logger.info("Loading data...");
-		dbManager = new DatabaseManager();
-		dbManager.executeInserts(VisualizerSettings.dataSet, VisualizerSettings.table_name, VisualizerSettings.query);
+		HashMap<String,Object> inputs = new HashMap<String,Object>();
+		inputs.put("tableName", VisualizerSettings.table_name);
+		inputs.put("dataSet", VisualizerSettings.dataSet);
+		inputs.put("insertQuery", VisualizerSettings.query);
+		
+		SplashProvider.invokeWithSplash("CREATE_DB", inputs,"musicloading_small.gif", "Spotify Decade Loading....", "");
+		dbManager = SplashProvider.dbManager;
+		//dbManager.executeInserts(VisualizerSettings.dataSet, VisualizerSettings.table_name, VisualizerSettings.query);
 		logger.info("Database Created!");
 	}
 
@@ -155,6 +159,12 @@ public class YearCanvas extends PApplet {
 		SCREEN_HEIGHT = VisualizerSettings.SCREEN_HEIGHT;
 		wholeTable = loadTable(VisualizerSettings.dataSet, "header");
 		size(SCREEN_WIDTH, SCREEN_HEIGHT, P3D);
+		try {
+			loadDataSet();
+		} catch (ClassNotFoundException | IOException | InterruptedException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void setup() {
@@ -290,7 +300,7 @@ public class YearCanvas extends PApplet {
 	}
 
 	public void draw() {
-		background(216, 252, 231);
+		background(VisualizerSettings.BACKGROUND_COLOR[0],VisualizerSettings.BACKGROUND_COLOR[1],VisualizerSettings.BACKGROUND_COLOR[2]);
 		//image(logo,30,0);
 		float start = 1.933333f;
 		float radians = (PI * (360 / 8)) / 180;
@@ -462,6 +472,8 @@ public class YearCanvas extends PApplet {
 		pushMatrix();
 		strokeWeight(2);
 		fill(162, 247, 134);
+		//fill(51, 202, 160);
+		//noFill();
 		noStroke();
 		ellipse(width / 2 - 350, height / 2 - 270, 290, 290);
 		ellipse(width / 2, height / 2 - 270, 290, 290);

@@ -11,13 +11,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import com.tcd.databases.Table;
+import com.tcd.databases.DTable;
 import com.tcd.databases.sample.DatabaseManager;
 import com.tcd.gui.SplashScreen;
 
 public class SplashProvider {
 
-	private static DatabaseManager dbManager = null;
+	public static DatabaseManager dbManager = null;
 	private static Object output = null;
 	private static Logger logger;
 
@@ -53,7 +53,7 @@ public class SplashProvider {
 					case "EXECUTE_QUERY":
 						if (dbManager != null) {
 							//System.out.println(query);
-							output = new Table(dbManager.executeQuery(query),query);}
+							output = new DTable(dbManager.executeQuery(query),query);}
 						else
 							logger.error("Database Connection not established!!");
 					}

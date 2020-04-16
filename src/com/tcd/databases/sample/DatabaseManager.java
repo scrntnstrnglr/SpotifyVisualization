@@ -16,8 +16,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-
-import com.tcd.databases.Table;
 import com.tcd.gui.SplashScreen;
 import com.tcd.spotify.VisualizerSettings;
 import com.tcd.utils.SplashProvider;
@@ -94,25 +92,30 @@ public class DatabaseManager {
 	
 
 	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-		//SplashProvider.invokeWithSplash("CREATE_DB", "musicloading_small.gif", "Creating DB....", "");
-		//SplashProvider.invokeWithSplash("EXECUTE_QUERY", "musicloading_small.gif", "Running Query....",
-		//		"select * from spotify_decade where Number=\"80\"");
 		
-		DatabaseManager dbManager = new DatabaseManager();
-		dbManager.executeInserts(VisualizerSettings.dataSet, VisualizerSettings.table_name, VisualizerSettings.query);
+		
+		HashMap<String,Object> inputs = new HashMap<String,Object>();
+		inputs.put("tableName", VisualizerSettings.table_name);
+		inputs.put("dataSet", VisualizerSettings.dataSet);
+		inputs.put("insertQuery", VisualizerSettings.query);
+		SplashProvider.invokeWithSplash("CREATE_DB", inputs,"musicloading_small.gif", "Creating DB....", "");
+		SplashProvider.invokeWithSplash("EXECUTE_QUERY", inputs,"musicloading_small.gif", "Running Query....","select * from spotify_decade where Number=\"80\"");
+		
+		//DatabaseManager dbManager = new DatabaseManager();
+		//dbManager.executeInserts(VisualizerSettings.dataSet, VisualizerSettings.table_name, VisualizerSettings.query);
 		/*
 		String selectQuery = "select * from spotify_decade where rowid<=3";
 		ResultSet rs = dbManager.executeQuery(selectQuery);
 		while(rs.next()) {
 			System.out.println(rs.getString("spch"));
-		} */
+		} 
 		
 		String maxQuery = "select max(bpm) m from spotify_decade";
 		ResultSet rs = dbManager.executeQuery(maxQuery);
 		while(rs.next()) {
 			System.out.println(rs.getString("m"));
 		}
-		dbManager.closeConnection();
+		dbManager.closeConnection(); */
 	}
 
 }

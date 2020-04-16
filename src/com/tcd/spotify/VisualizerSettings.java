@@ -24,7 +24,8 @@ public class VisualizerSettings {
 	public final static float ECLIPSE_RADIUS = 42f;
 	public final static HashMap<Integer,Integer> SLIDER_TO_LABEL_MAPPING = new HashMap<Integer,Integer>(loadSliderToLabelMapping());
 	public final static HashMap<String,PVector> barPositions = new HashMap<String,PVector>(loadBarPositions());
-	public final static int BACKGROUND_COLOR = 0;
+	public final static float[] BACKGROUND_COLOR = {216, 252, 231};
+	//public final static float[] BACKGROUND_COLOR = {97, 236, 143};
 	public final static boolean SHOW_RADIAL_GRAPH_LABELS = true;
 	public final static String tipText = "Press 'N' for next tip and 'P' for previous tip";
 	public final static String hintText = "Click for guided tour";
