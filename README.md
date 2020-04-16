@@ -13,7 +13,12 @@ Almost everyone is familiar with Spotify, a widely using online music streaming 
 
 ![Main image](https://github.com/scrntnstrnglr/SpotifyVisualization/blob/master/readmeimages/mainImage.png)
 
-In this visualization, I have attempted to create an interactive environment to analyze the relationship between these attributes, with a primary foucs on how all the attributes correlate to the valence of a song. In other words, trying to establish the level of dependence of the other attributes to the valence of a song. The visualization also serves other purposes. It is built on all the songs that Spotify has deemed popular in the last decade that is from 2010-2019. A guide to each view is provided within the application by clicking the tour button.
+In this visualization, I have attempted to create an interactive environment to analyze the relationship between these attributes, with a primary foucs on how all the attributes correlate to the valence of a song. In other words, trying to establish the level of dependence of the other attributes to the valence of a song. The visualization also serves other purposes. It is built on all the songs that Spotify has deemed popular in the last decade that is from 2010-2019. The visualization is divided into 3 separate interactive vies as following:
+1. Main view: Is controlled with the mouse scroll. The top 3 songs and their attributes are displayed for the active year selected. The genres relevant for that year are also displayed.
+2. Property to Song View: This view lets the user adjust attribute levels on the radial graph. The song with attributes closest to the combination of all attributes set in the radial graph is displayed. Along with the name of the song, the artist relevance throughout the decade is also plotted.
+3. Song to Property View: This view lets the user adjust individual song attributes. The song attributes are placed on the Y-axis of the 2D-Slider. The X-Axis consists the years. The song with the closes attribute value is picked and displayed along with it's attributes.
+
+A guide to each view is given within the application by clicking the guide button on the top right corner.
 
 
 # System Requirements:
@@ -28,20 +33,14 @@ java -version
 
 # How to run:
 
-The project inlucdes a launcher application/jar  file which initiates the visualizer. The data has been preloaded. Clone the repository, or just download the 'target' folder.
+The project includes a launcher application/jar  file which initiates the visualizer. The data has been preloaded. Clone the repository, or just download the 'target' folder.
 
 1. Clone repository:
 ```
 git clone https://github.com/scrntnstrnglr/SpotifyVisualization
 ```
-2. Go to the target foloder.
-2. Double click "SPOTIFY.jar" file to run.
-
-Alternatively
-
-3. Open a terminal/cmd and execute the following after navigating to the folder containing the executable jar.
-```
-java -jar SPOTIFY.JAR
-```
+2. Go to the target folder.
+3. Double click the runME.bat file on Windows, or the runME.sh file on Linux to launch the application.
+4. It is imperative that all files and folders within the target folder should be untouched for proper functioning of the application as they contained all related dependencies.
 
 A log file is generated to keep track of errors and debug lines.
