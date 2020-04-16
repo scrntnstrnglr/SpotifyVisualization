@@ -1,7 +1,19 @@
-# Past Decade Visualization of Spotify Data
+# Visualization of Last Decade Spotify Data
 
-The music streaming application Spotify quantifies all of its songs with certain attributes such as valence,
-popularity, loudness, liveness etc. This interactive application built using Processing attempts to visualize this data with an aim to explore the relationships between these attributes.
+Almost everyone is familiar with Spotify, a widely using online music streaming application. Any song from any corner of the globe can be found in spotify. Spotify not only serves as an entertainment application, but also as an important data hub for all of its music. Appropos to this, Spotify quantifies all of its music with certain quintessential attributes that are relevant to any song. Some of them are:
+1. Valence : The level of positivity/negativity of a song.
+2. BPM : Beats per minute or the tempo of the song.
+3. Danceability.
+4. Energy.
+5. Loudness : In terms of decibels.
+6. Liveness.
+7. Speech : Amount of words.
+8. Duration.
+9. Popularity.
+
+
+
+In this visualization, I have attempted to create an interactive environment to analyze the relationship between these attributes, with a primary foucs on how all the attributes correlate to the valence of a song. In other words, trying to establish the level of dependence of the other attributes to the valence of a song. The visualization also serves other purposes. It is built on all the songs that Spotify has deemed popular in the last decade that is from 2010-2019. A guide to each view is provided within the application by clicking the tour button.
 
 
 # System Requirements:
