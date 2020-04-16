@@ -1,1 +1,1 @@
-java -jar -Xms512M -Xmx1024M SPOTIFY.jar
+java -jar -Xms512M -Xmx1024M jar/SPOTIFY.jar

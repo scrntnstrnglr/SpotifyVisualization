@@ -135,9 +135,9 @@ public class YearCanvas extends PApplet {
 		logger = Logger.getLogger(YearCanvas.class);
 		PropertyConfigurator.configure("properties" + File.separator + "log4j.properties");
 		maxminProps = new Properties();
-		maxminProps.load(new FileInputStream("properties" + File.separator + "maxminvalue.properties"));
+		maxminProps.load(this.getClass().getClassLoader().getResourceAsStream("maxminvalue.properties"));
 		messageAreaProps = new Properties();
-		messageAreaProps.load(new FileInputStream("properties" + File.separator + "messagearea.properties"));
+		messageAreaProps.load(this.getClass().getClassLoader().getResourceAsStream("messagearea.properties"));
 	}
 
 	private void loadDataSet() throws IOException, InterruptedException, ClassNotFoundException, SQLException {

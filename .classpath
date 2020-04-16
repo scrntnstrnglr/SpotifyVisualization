@@ -16,5 +16,8 @@
 	<classpathentry kind="lib" path="lib/peasycam.jar"/>
 	<classpathentry kind="lib" path="lib/tracer.jar"/>
 	<classpathentry kind="lib" path="lib/gifAnimation.jar"/>
+	<classpathentry kind="lib" path="properties"/>
+	<classpathentry kind="lib" path="img"/>
+	<classpathentry kind="lib" path="natives"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

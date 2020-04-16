@@ -27,6 +27,9 @@
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/peasycam.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/tracer.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/gifAnimation.jar"/>
+            <fileset dir="${dir.buildfile}/properties"/>
+            <fileset dir="${dir.buildfile}/img"/>
+            <fileset dir="${dir.buildfile}/natives"/>
         </jar>
     </target>
 </project>
