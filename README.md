@@ -11,7 +11,7 @@ Almost everyone is familiar with Spotify, a widely using online music streaming 
 8. Duration.
 9. Popularity.
 
-
+![Main image](https://github.com/scrntnstrnglr/SpotifyVisualization/blob/master/readmeimages/mainImage.png)
 
 In this visualization, I have attempted to create an interactive environment to analyze the relationship between these attributes, with a primary foucs on how all the attributes correlate to the valence of a song. In other words, trying to establish the level of dependence of the other attributes to the valence of a song. The visualization also serves other purposes. It is built on all the songs that Spotify has deemed popular in the last decade that is from 2010-2019. A guide to each view is provided within the application by clicking the tour button.
 
