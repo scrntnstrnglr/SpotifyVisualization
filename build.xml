@@ -5,7 +5,7 @@
     <!--define folder properties-->
     <property name="dir.buildfile" value="."/>
     <property name="dir.workspace" value="${dir.buildfile}/.."/>
-    <property name="dir.jarfile" value="${dir.buildfile}/target"/>
+    <property name="dir.jarfile" value="${dir.buildfile}/target/jar"/>
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/SPOTIFY.jar" filesetmanifest="mergewithoutmain">
             <manifest>
@@ -28,8 +28,6 @@
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/tracer.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/gifAnimation.jar"/>
             <fileset dir="${dir.buildfile}/properties"/>
-            <fileset dir="${dir.buildfile}/img"/>
-            <fileset dir="${dir.buildfile}/natives"/>
         </jar>
     </target>
 </project>

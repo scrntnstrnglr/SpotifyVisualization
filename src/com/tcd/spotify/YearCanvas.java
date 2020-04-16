@@ -132,12 +132,12 @@ public class YearCanvas extends PApplet {
 
 	YearCanvas() throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 		this.title = VisualizerSettings.TITLE;
-		logger = Logger.getLogger(YearCanvas.class);
-		PropertyConfigurator.configure("properties" + File.separator + "log4j.properties");
+		logger.info("Loading property files...");
 		maxminProps = new Properties();
 		maxminProps.load(this.getClass().getClassLoader().getResourceAsStream("maxminvalue.properties"));
 		messageAreaProps = new Properties();
 		messageAreaProps.load(this.getClass().getClassLoader().getResourceAsStream("messagearea.properties"));
+		logger.info("Property files loaded");
 	}
 
 	private void loadDataSet() throws IOException, InterruptedException, ClassNotFoundException, SQLException {
@@ -149,12 +149,11 @@ public class YearCanvas extends PApplet {
 		
 		SplashProvider.invokeWithSplash("CREATE_DB", inputs,"musicloading_small.gif", "Spotify Decade Loading....", "");
 		dbManager = SplashProvider.dbManager;
-		//dbManager.executeInserts(VisualizerSettings.dataSet, VisualizerSettings.table_name, VisualizerSettings.query);
 		logger.info("Database Created!");
 	}
 
 	public void settings() {
-		logger.info("Setting Year Canvas");
+		logger.info("Setting up....");
 		SCREEN_WIDTH = VisualizerSettings.SCREEN_WIDTH;
 		SCREEN_HEIGHT = VisualizerSettings.SCREEN_HEIGHT;
 		wholeTable = loadTable(VisualizerSettings.dataSet, "header");
@@ -163,7 +162,7 @@ public class YearCanvas extends PApplet {
 			loadDataSet();
 		} catch (ClassNotFoundException | IOException | InterruptedException | SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
 	}
 
@@ -174,7 +173,7 @@ public class YearCanvas extends PApplet {
 			years = new LinkedList<String>(getYears());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
 		
 		
@@ -277,8 +276,6 @@ public class YearCanvas extends PApplet {
 		yLabels.add("Liveness");
 		yLabels.add("Valence");
 		
-		//animationImg = loadImage("img\\loading_gifs\\pointer.gif");
-		//animationImg.resize(50, 50);
 		pointerDown = new Gif(this, "img\\loading_gifs\\pointer-resized.gif");
 		pointerUp = new Gif(this, "img\\loading_gifs\\pointer-up.gif");
 		pointerLeft = new Gif(this, "img\\loading_gifs\\pointer-left.gif");
@@ -287,10 +284,6 @@ public class YearCanvas extends PApplet {
 		pointerUp.play();
 		pointerLeft.play();
 		pointerRight.play();
-		/*
-		 * genreButton = cp5.addButton("Genre").setPosition(width / 2 - 50, height -
-		 * 155) .setWidth(100).setHeight(20).setLabel("Show Genres").setValue(1);
-		 */
 
 		displayMessageArea = new LinkedHashMap<Integer, String>();
 		displayMessageArea.put(1, "messageAreaYearScroll");
@@ -301,17 +294,12 @@ public class YearCanvas extends PApplet {
 
 	public void draw() {
 		background(VisualizerSettings.BACKGROUND_COLOR[0],VisualizerSettings.BACKGROUND_COLOR[1],VisualizerSettings.BACKGROUND_COLOR[2]);
-		//image(logo,30,0);
 		float start = 1.933333f;
 		float radians = (PI * (360 / 8)) / 180;
 		if (!tourViewActive)
 			createBorders();
 		createYearSlider();
-		// fill(255);
-		// stroke(55, 210, 4);
-		// fill(255);
-		// rect(100, 100, 200, 200);
-		// fill(yearSlider.getValue());
+		
 		DTable thisYearTable = new DTable();
 		try {
 			String query = "select * from spotify_decade where year='" + (int) yearSlider.getValue() + ""
@@ -319,7 +307,7 @@ public class YearCanvas extends PApplet {
 			thisYearTable = getDataForYear(query);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
 
 		int blur = VisualizerSettings.PHOTO_BLUR;
@@ -383,8 +371,6 @@ public class YearCanvas extends PApplet {
 		}
 
 		pushMatrix();
-		// stroke(10);
-		// rect(5,5,300,100);
 		float sum = 0.0f;
 		for(float val : genreBarData.values())
 			sum+=val;
@@ -1246,16 +1232,19 @@ public class YearCanvas extends PApplet {
 		// logger.info("Initializing Visualization");
 		String[] a = { "MAIN" };
 		try {
+			logger = Logger.getLogger(YearCanvas.class);
+			logger.info("\n\n-------------------------------------------------------------------------------------------------------------");
+			PropertyConfigurator.configure("properties" + File.separator + "log4j.properties");
 			PApplet.runSketch(a, new YearCanvas());
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
 	}
 
