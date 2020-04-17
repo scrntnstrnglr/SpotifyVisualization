@@ -6,9 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 
-import shapes3d.*;
-import tracer.Tracer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -1094,7 +1091,6 @@ public class YearCanvas extends PApplet {
 				logger.info("Right key pressed");
 				float currentValue = yearSlider.getValue();
 				float newValue = --currentValue;
-				System.out.println(newValue);
 				if(newValue>=2010 && newValue<=2019) {
 					yearSlider.setValue(newValue);
 				}
@@ -1112,7 +1108,6 @@ public class YearCanvas extends PApplet {
 				logger.info("Right key pressed");
 				float currentValue = yearSlider.getValue();
 				float newValue = --currentValue;
-				System.out.println(newValue);
 				if(newValue>=2010 && newValue<=2019) {
 					yearSlider.setValue(newValue);
 				}

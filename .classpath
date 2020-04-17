@@ -10,11 +10,8 @@
 	<classpathentry kind="lib" path="lib/processing 3/jogl-all.jar"/>
 	<classpathentry kind="lib" path="lib/processing 3/json4processing.jar"/>
 	<classpathentry kind="lib" path="lib/G4P.jar"/>
-	<classpathentry kind="lib" path="lib/OCT.jar"/>
-	<classpathentry kind="lib" path="lib/Shapes3D.jar"/>
 	<classpathentry kind="lib" path="lib/peasy-math.jar"/>
 	<classpathentry kind="lib" path="lib/peasycam.jar"/>
-	<classpathentry kind="lib" path="lib/tracer.jar"/>
 	<classpathentry kind="lib" path="lib/gifAnimation.jar"/>
 	<classpathentry kind="lib" path="properties"/>
 	<classpathentry kind="output" path="bin"/>

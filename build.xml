@@ -21,11 +21,8 @@
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/processing 3/jogl-all.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/processing 3/json4processing.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/G4P.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/OCT.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/Shapes3D.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/peasy-math.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/peasycam.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/tracer.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/gifAnimation.jar"/>
             <fileset dir="${dir.buildfile}/properties"/>
         </jar>
