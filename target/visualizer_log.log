@@ -1,0 +1,19 @@
+INFO    2020-04-17 15:20:33,516 [main] com.tcd.spotify.YearCanvas  - 
+
+-------------------------------------------------------------------------------------------------------------
+INFO    2020-04-17 15:20:33,525 [main] com.tcd.spotify.YearCanvas  - Loading property files...
+INFO    2020-04-17 15:20:33,527 [main] com.tcd.spotify.YearCanvas  - Property files loaded
+INFO    2020-04-17 15:20:33,648 [main] com.tcd.spotify.YearCanvas  - Setting up....
+INFO    2020-04-17 15:20:33,676 [main] com.tcd.spotify.YearCanvas  - Loading data...
+INFO    2020-04-17 15:20:38,971 [main] com.tcd.spotify.YearCanvas  - Database Created!
+INFO    2020-04-17 15:21:26,060 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - N key pressed
+INFO    2020-04-17 15:21:28,832 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - N key pressed
+INFO    2020-04-17 15:21:30,962 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - N key pressed
+INFO    2020-04-17 15:21:34,492 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - N key pressed
+INFO    2020-04-17 15:21:39,632 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - Right key pressed
+INFO    2020-04-17 15:21:40,894 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - Right key pressed
+INFO    2020-04-17 15:21:42,254 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - Right key pressed
+INFO    2020-04-17 15:21:43,726 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - Right key pressed
+INFO    2020-04-17 15:21:49,852 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - Left key pressed
+INFO    2020-04-17 15:22:03,520 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - Right key pressed
+INFO    2020-04-17 15:22:06,199 [main-FPSAWTAnimator#00-Timer0] com.tcd.spotify.YearCanvas  - Right key pressed
