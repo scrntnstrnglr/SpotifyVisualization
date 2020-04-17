@@ -28,8 +28,7 @@ A guide to each view is given within the application by clicking the guide butto
 ```
 java -version
 ```
-3. If a definite java version is visible, you're good to go.
-4. Else, [install java](https://java.com/en/download/manual.jsp) 
+3. If your Java version is below 1.8, please update using [install java](https://java.com/en/download/manual.jsp) or the latest version is also available in this repo [here](https://github.com/scrntnstrnglr/SpotifyVisualization/tree/master/install)
 
 # How to run:
 
