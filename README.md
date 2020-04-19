@@ -21,7 +21,7 @@ In this visualization, I have attempted to create an interactive environment to 
 A guide to each view is given within the application by clicking the guide button on the top right corner.
 
 
-# System Requirements:
+### System Requirements:
 1. You should have java jdk version 1.8 and above. 
 2. To check if java is enable in your system, open a terminal (Linux), command prompt (Windows) and run the following command:
 
@@ -31,7 +31,7 @@ java -version
 3. If your Java version is below 1.8, please update using [install java](https://java.com/en/download/manual.jsp) or the latest version is also available in this repo [here](https://github.com/scrntnstrnglr/SpotifyVisualization/tree/master/install)
 4. A stable internt connection as the application includes certain http requests to fetch image files.
 
-# How to run:
+### How to run:
 
 Clone the repository, or download the repository 
 
@@ -43,3 +43,20 @@ git clone https://github.com/scrntnstrnglr/SpotifyVisualization
 4. It is imperative that all files and folders within the target folder should be untouched for proper functioning of the application as they contained all related dependencies.
 
 A log file is generated to keep track of errors and debug lines.
+
+### Repository Contents and Structure:
+The folders and files contained in the repository are explained as below:
+1. Scripts - contains the python script for preprocessing.
+2. bin - contains the java binary class files.
+3. data - contains the original and processed data set csv files.
+4. img - the image folder containing all images being used by the application.
+5. install - contains jdk 8 installer.
+6. lib - all dependency jar files.
+7. natives - processing native dll files for all operating systems.
+8. porperties - property files being used for logging and help-mode view.
+9. readmeimages - contains HD thumbnail image of visualization.
+10. report - contains updated technical paper for the visualization.
+11. src - contains source code.
+12. build.xml - for building executable jar file for the visualization
+13. runME.bat - batch file for launching application in windows.
+14. runME.sh - shell script file for launching application in Linux.
