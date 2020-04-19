@@ -32,17 +32,13 @@ java -version
 
 # How to run:
 
-The project includes a launcher application/jar  file which initiates the visualizer. The data has been preloaded. Clone the repository, or just download the 'target' folder.
+Clone the repository, or download the repository 
 
 1. Clone repository:
 ```
 git clone https://github.com/scrntnstrnglr/SpotifyVisualization
 ```
-2. Go to the target folder.
-3. Double click the runME.bat file on Windows, or the runME.sh file on Linux to launch the application.
+2. Double click the runME.bat file on Windows, or the runME.sh file on Linux to launch the application.
 4. It is imperative that all files and folders within the target folder should be untouched for proper functioning of the application as they contained all related dependencies.
-
-Alternatively...
-Download the target folder from the repository and follow the above steps
 
 A log file is generated to keep track of errors and debug lines.
