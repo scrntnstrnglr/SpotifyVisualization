@@ -175,7 +175,7 @@ public class YearCanvas extends PApplet {
 		}
 		
 		
-		logo = loadImage("img\\arrows\\logo.png");
+		logo = loadImage("img\\arrows\\#logo.png");
 		logo.resize(250, 40);
 		messageAreaYearScroll = new GTextArea(this, 0,0,width-400,40); 
 		messageAreaPropToSong = new GTextArea(this, 0,0,width-400,40);
