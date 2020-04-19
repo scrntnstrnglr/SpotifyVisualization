@@ -29,6 +29,7 @@ A guide to each view is given within the application by clicking the guide butto
 java -version
 ```
 3. If your Java version is below 1.8, please update using [install java](https://java.com/en/download/manual.jsp) or the latest version is also available in this repo [here](https://github.com/scrntnstrnglr/SpotifyVisualization/tree/master/install)
+4. A stable internt connection as the application includes certain http requests to fetch image files.
 
 # How to run:
 
